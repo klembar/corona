@@ -7,7 +7,7 @@ from collections import namedtuple
 import matplotlib.pyplot as pl
 import time
 URL_BASE = "https://api.covid19api.com/total/country/"
-SLEEP = 3  #tyle sekund odczeka skrypt gdy API powie że pytamy za często. Gdyby pojawił się znowu problem, możesz tą
+SLEEP = 5 #tyle sekund odczeka skrypt gdy API powie że pytamy za często. Gdyby pojawił się znowu problem, możesz tą
 # wartość zwiększyć np. do 5,
 
 # mala "klasa" ktora ma pola name i country
@@ -17,6 +17,7 @@ Country = namedtuple("Country", ["name", "citizens"])
 def confirmed_in_country(country_name: str):
     response = requests.get(URL_BASE + country_name)
     if response.status_code != 200: # zapytanie zakonczyło nie sie sukcesem (kod 200 oznacza sukces)
+        print(f"Request failed, retrying after {SLEEP} seconds")
         time.sleep(SLEEP) # odczekaj kilka sekund
         response = requests.get(URL_BASE + country_name) # i wywolaj jeszcze raz to samo zapytanie
     response_json = response.json()
@@ -34,6 +35,7 @@ def confirmed_per_million(country: Country):  # podalem typ zmiennej
 def deaths_in_country(country_name: str):
     response = requests.get(URL_BASE + country_name)
     if response.status_code != 200: # zapytanie zakonczyło nie sie sukcesem (kod 200 oznacza sukces)
+        print(f"Request failed, retrying after {SLEEP} seconds")
         time.sleep(SLEEP) # odczekaj
         response = requests.get(URL_BASE + country_name) # i wywolaj jeszcze raz to samo zapytanie
     response_json = response.json()
